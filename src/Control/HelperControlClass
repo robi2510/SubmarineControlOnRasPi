@@ -1,0 +1,119 @@
+package Control;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.eurotech.cloud.client.EdcClientException;
+
+public class HelperControlClass extends Thread{
+    
+    
+
+	public void run()
+	{
+            System.out.println("Usage: submarine [-r] [-c] [-s]");
+	    System.out.println("-r : reboot");
+	    System.out.println("-c : configure");
+	    System.out.println("-s : start");
+	    System.out.println("alloff : closing engines and electronic equipment");
+	    System.out.println("poweroff : closing engines and program on RasPi");
+	    InputStreamReader ISR = new InputStreamReader(System.in);
+            BufferedReader BR = new BufferedReader(ISR);
+        
+        String userInput = null; 
+        for(;;)
+        {
+        /*try 
+        {
+            setUserInput(BR.readLine(); //program waits here until the user inserts a line of text
+        } 
+        catch (IOException ex) 
+        {
+            Logger.getLogger(InputStream.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        
+        if(userInput == "alloff")
+        {
+        	GPIOControl.PinStateRele0 = false;
+        	GPIOControl.PinStateRele1 = false;
+        	GPIOControl.PinStateRele2 = false;
+        	GPIOControl.PinStateRele3 = false;
+        	GPIOControl.PinStateRele4 = false;
+        	GPIOControl.PinStateRele5 = false;
+        	GPIOControl.PinStateRele6 = false;
+        	GPIOControl.PinStateRele7 = false;	
+                System.out.println(userInput);
+        }
+        else
+        	if(userInput == "-s")
+        	{
+        		try 
+        		{
+					EDC.EdcSubMarineOnRasPi.Login();
+				} 
+        		catch (EdcClientException e) 
+        		{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+        		catch (InterruptedException e) 
+        		{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+        	else
+        		if(userInput == "poweroff")
+        		{
+                            GPIOControl.PinStateRele0 = false;
+                            GPIOControl.PinStateRele1 = false;
+                            GPIOControl.PinStateRele2 = false;
+                            GPIOControl.PinStateRele3 = false;
+                            GPIOControl.PinStateRele4 = false;
+                            GPIOControl.PinStateRele5 = false;
+                            GPIOControl.PinStateRele6 = false;
+                            GPIOControl.PinStateRele7 = false;
+                	try 
+                	{
+						Thread.sleep(1000);
+					} 
+                	catch (InterruptedException e) 
+                	{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+			}
+                	System.out.println("The engines were turned off");
+                	System.out.println("Shutdown");
+                	int i;
+                	for(i=0;i<4;i++)
+                	{
+                		System.out.print(i);
+                		try 
+                		{
+							Thread.sleep(400);
+						} 
+                		catch (InterruptedException e) 
+                		{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+                	}
+                	System.exit(0);
+                	
+        		}
+	}
+        }
+       /* public void setUserInput(String UI)
+        {
+            this.UserInput = UI;
+        }
+        public String getUserInput()
+        {
+            return UserInput;
+        }*/
+
+}
