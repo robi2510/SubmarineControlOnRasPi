@@ -1,0 +1,108 @@
+package DataManager;
+
+import java.io.Serializable;
+
+public class ControlToReceive implements Serializable
+{
+	private static final long serialVersionUID = 1L;
+	
+	private boolean EngineBackLeft;
+	private boolean EngineBackRight;
+	private boolean EngineLateralLeft;
+	private boolean EngineLateralRight;
+	private boolean EngineAheadLeft;
+	private boolean EngineAheadRight;
+	private boolean EngineEmersion;
+	private boolean EngineImmersion;
+	private boolean GPIOState;
+	
+	
+	public ControlToReceive()
+	{
+		EngineBackLeft = false;
+		EngineBackRight = false;
+		EngineLateralLeft = false;
+		EngineLateralRight = false;
+		EngineAheadLeft = false;
+		EngineAheadRight = false;
+		EngineEmersion = false;
+		EngineImmersion = false;
+		GPIOState = false;
+		
+	}
+	
+	public boolean getEngineBackLeft()
+	{
+		return EngineBackLeft;
+	}
+	public void setEngineBackleft(boolean EBL)
+	{
+		this.EngineBackLeft = EBL;
+	}
+	public boolean getEngineBackRight()
+	{
+		return EngineBackRight;
+	}
+	public void setEngineBackRight(boolean EBR)
+	{
+		this.EngineBackRight = EBR;
+	}
+	public boolean getEngineLateralLeft()
+	{
+		return EngineLateralLeft;
+	}
+	public void setEngineLateraleLeft(boolean ELL)
+	{
+		this.EngineLateralLeft = ELL;
+	}
+	public boolean getEngineLateraleRight()
+	{
+		return EngineLateralRight;
+	}
+	public void setEngineLateralRight(boolean ELR)
+	{
+		this.EngineLateralRight = ELR;
+	}
+	public boolean getEngineAheadLeft()
+	{
+		return EngineAheadLeft;
+	}
+	public void setEngineAheadleft(boolean EAL)
+	{
+		this.EngineAheadLeft = EAL;
+	}
+	public boolean getEngineAheadRight()
+	{
+		return EngineAheadRight;
+	}
+	public void setEngineAheadRight(boolean EAR)
+	{
+		this.EngineAheadRight = EAR;
+	}
+	public boolean getEngineEmersion()
+	{
+		return EngineEmersion;
+	}
+	public void setEngineEmersion(boolean EE)
+	{
+		this.EngineEmersion = EE;
+	}
+	public boolean getEngineImmersion()
+	{
+		return EngineImmersion;
+	}
+	public void setEngineImmersion(boolean EI)
+	{
+		this.EngineImmersion = EI;
+	}
+	public boolean getGPIOState()
+	{
+		return GPIOState;
+	}
+	public void setGPIOState(boolean GPState)
+	{
+		this.GPIOState = GPState;
+	}
+	
+
+}
