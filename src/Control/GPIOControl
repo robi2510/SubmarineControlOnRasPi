@@ -1,0 +1,339 @@
+package Control;
+
+import DataManager.ControlToReceive;
+import EDC.EdcSubMarineOnRasPi;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
+
+import static com.pi4j.wiringpi.Gpio.delay;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class GPIOControl extends Thread{
+    
+    public static final GpioController gpio = GpioFactory.getInstance();
+    public static final GpioPinDigitalOutput pin0 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin1 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin2 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin3 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin4 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin5 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin6 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin7 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin8 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin9 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_09, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin10 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_10, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin11 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_11, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin12 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_12, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin13 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin14 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_14, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin15 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, "MyLED", PinState.LOW);
+    public static final GpioPinDigitalOutput pin16 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_16, "MyLED", PinState.LOW);
+    
+    
+    
+    public static boolean PinStateRele0 = false;
+    public static boolean PinStateRele1 = false;
+    public static boolean PinStateRele2 = false;
+    public static boolean PinStateRele3 = false;
+    public static boolean PinStateRele4 = false;
+    public static boolean PinStateRele5 = false;
+    public static boolean PinStateRele6 = false;
+    public static boolean PinStateRele7 = false;
+    public static int ReleDelay = 300;   //Residence time of the state of the ouput gpio
+    public static boolean AllPinState[] = new boolean[8];
+    public static ControlToReceive ControlToPC = new ControlToReceive();
+    
+    public static void GPIOControl() throws InterruptedException 
+    {
+        int i;
+        System.out.println("--> GPIO has been initialized");
+        for(i=0;i<8;i++)
+        {
+            AllPinState[i] = false;
+        }
+        
+    }
+    @Override
+    public void run()
+    {
+    	for(;;)
+    	{
+                //for direct control of relays without translation string
+                /*if(getPinStateRele0())
+                    pin0.high();
+                else
+                    pin0.low();
+                if(getPinStateRele1())
+                    pin1.high();
+                else
+                    pin1.low();
+                if(getPinStateRele2())
+                    pin2.high();
+                else
+                    pin2.low();
+                if(getPinStateRele3())
+                    pin13.high();
+                else
+                    pin13.low();
+                if(getPinStateRele4())
+                    pin4.high();
+                else
+                    pin4.low();
+                if(getPinStateRele5())
+                    pin5.high();
+                else
+                    pin5.low();
+                if(getPinStateRele6())
+                    pin6.high();
+                else
+                    pin6.low();
+                if(getPinStateRele7())
+                    pin7.high();
+                else
+                    pin7.low();*/
+                boolean State[] = new boolean[8];
+                State = getAllPinState();
+                ControlToPC.setEngineAheadRight(false);
+                ControlToPC.setEngineAheadleft(false);
+                ControlToPC.setEngineBackRight(false);
+                ControlToPC.setEngineBackleft(false);
+                ControlToPC.setEngineEmersion(false);
+                ControlToPC.setEngineImmersion(false);
+                ControlToPC.setEngineLateralRight(false);
+                ControlToPC.setEngineLateraleLeft(false);
+                ControlToPC.setGPIOState(!gpio.isShutdown());
+                
+                if(State[0])
+                    pin0.high();
+                else
+                    pin0.low();
+                if(State[1])
+                    pin1.high();
+                else
+                    pin1.low();
+                if(State[2])
+                    pin2.high();
+                else
+                    pin2.low();
+                if(State[3])
+                    pin13.high(); 
+                else
+                    pin13.low();
+                if(State[4])
+                    pin4.high();
+                else
+                    pin4.low();
+                if(State[5])
+                    pin5.high();
+                else
+                    pin5.low();
+                if(State[6])
+                    pin6.high();
+                else
+                    pin6.low();
+                if(State[7])
+                    pin7.high();
+                else
+                    pin7.low();
+                
+            if(pin0.getState().isHigh())
+            {
+                ControlToPC.setEngineBackleft(true);
+                //System.out.println("pin0 alto");
+            }
+            if(pin1.getState().isHigh())
+            {
+                ControlToPC.setEngineBackRight(true);
+                //System.out.println("pin1 alto");
+            }
+            if(pin2.getState().isHigh())
+            {
+                ControlToPC.setEngineEmersion(true);
+                //System.out.println("pin2 alto");
+            }
+            if(pin4.getState().isHigh())
+            {
+                ControlToPC.setEngineAheadleft(true);
+                //System.out.println("pin4 alto");
+            }
+            if(pin5.getState().isHigh())
+            {
+                ControlToPC.setEngineLateralRight(true);
+                //System.out.println("pin5 alto");
+            }
+            if(pin6.getState().isHigh())
+            {
+                ControlToPC.setEngineLateraleLeft(true);
+                //System.out.println("pin6 alto");
+            }
+            if(pin7.getState().isHigh())
+            {
+                ControlToPC.setEngineAheadRight(true);
+                //System.out.println("pin7 alto");
+            }
+            if(pin13.getState().isHigh())
+            {
+                ControlToPC.setEngineImmersion(true);
+                //System.out.println("pin13 alto");
+            }
+               
+                try 
+                {
+                    EdcSubMarineOnRasPi.SendMessage("TopicControlOutput", toByteArray(ControlToPC));
+                } 
+                catch (IOException ex) 
+                {
+                    Logger.getLogger(GPIOControl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+    		try
+    		{
+                    Thread.sleep(100);
+                } 
+    		catch (InterruptedException e) 
+    		{
+				// TODO Auto-generated catch block
+                    e.printStackTrace();
+		}
+    	}
+    }
+    public static void motore_posteriore_1_avanti(int delay) throws InterruptedException
+    {
+        pin0.pulse(delay, PinState.HIGH);
+   
+    }
+    public static void motore_posteriore_1_indietro(int delay) throws InterruptedException
+    {
+        pin1.pulse(delay, PinState.HIGH);
+   
+    }
+    public static void motore_posteriore_2_avanti(int delay) throws InterruptedException
+    {
+        pin2.blink(delay, PinState.HIGH);
+    }
+    public static void motore_posteriore_2_indietro(int delay) throws InterruptedException
+    {
+        pin3.blink(delay, PinState.HIGH);
+    }
+    public static void motore_laterale_avanti(int delay) throws InterruptedException
+    {
+         pin4.blink(delay, PinState.HIGH);
+    }
+    public static void motore_laterale_indietro(int delay) throws InterruptedException
+    {
+         pin5.blink(delay, PinState.HIGH);
+    }
+    public static void motore_verticale_avanti(int delay) throws InterruptedException
+    {
+         pin6.blink(delay, PinState.HIGH);
+    }
+    public static void motore_verticale_indietro(int delay) throws InterruptedException
+    {
+         pin7.blink(delay, PinState.HIGH);
+    }
+    public static void setPinStateRele0(boolean rel0)
+    {
+        PinStateRele0 = rel0;
+    }
+    public boolean getPinStateRele0()
+    {
+        return PinStateRele0;
+    }
+    public static void setPinStateRele1(boolean rel1)
+    {
+        PinStateRele1 = rel1;
+    }
+    public boolean getPinStateRele1()
+    {
+        return PinStateRele1;
+    }
+    public static void setPinStateRele2(boolean rel2)
+    {
+        PinStateRele2 = rel2;
+    }
+    public boolean getPinStateRele2()
+    {
+        return PinStateRele2;
+    }
+    public static void setPinStateRele3(boolean rel3)
+    {
+        PinStateRele3 = rel3;
+    }
+    public boolean getPinStateRele3()
+    {
+        return PinStateRele3;
+    }
+    public static void setPinStateRele4(boolean rel4)
+    {
+        PinStateRele4 = rel4;
+    }
+    public boolean getPinStateRele4()
+    {
+        return PinStateRele4;
+    }
+    public static void setPinStateRele5(boolean rel5)
+    {
+        PinStateRele5 = rel5;
+    }
+    public boolean getPinStateRele5()
+    {
+        return PinStateRele5;
+    }
+    public static void setPinStateRele6(boolean rel6)
+    {
+        PinStateRele6 = rel6;
+    }
+    public boolean getPinStateRele6()
+    {
+        return PinStateRele6;
+    }
+    public static  void setPinStateRele7(boolean rel7)
+    {
+        PinStateRele7 = rel7;
+    }
+    public boolean getPinStateRele7()
+    {
+        return PinStateRele7;
+    }
+    public static void setAllPinState(boolean rel[])
+    {
+        AllPinState = rel;
+    }
+    public boolean[] getAllPinState()
+    {
+        return AllPinState;
+    }
+    public static byte[] toByteArray(Object obj) throws IOException 
+	{
+		byte[] bytes = null;
+		ByteArrayOutputStream bos = null;
+		ObjectOutputStream oos = null;
+		try 
+		{
+			bos = new ByteArrayOutputStream();
+			oos = new ObjectOutputStream(bos);
+			oos.writeObject(obj);
+			oos.flush();
+			bytes = bos.toByteArray();
+		} 
+		finally 
+		{
+			if (oos != null) 
+			{
+				oos.close();
+			}
+			if (bos != null) 
+			{
+				bos.close();
+			}
+		}
+		return bytes;
+	}
+}
