@@ -1,0 +1,157 @@
+package DataManager;
+
+import java.io.Serializable;
+
+public class ControlToSend implements Serializable
+{
+	private static final long serialVersionUID = 1L;
+	
+	private boolean MasterSituation, CamControl;
+	private boolean rele0;
+	private boolean rele1;
+	private boolean rele2;
+	private boolean rele3;
+	private boolean rele4;
+	private boolean rele5;
+	private boolean rele6;
+	private boolean rele7;
+	private int delay;
+        public static String TypeOfmuvement = null;
+        public String TypeOfMovement;
+	
+	public ControlToSend()
+	{
+		MasterSituation = true;
+		CamControl = false;
+		rele0 = false;
+		rele1 = false;
+		rele2 = false;
+		rele3 = false;
+		rele4 = false;
+		rele5 = false;
+		rele6 = false;
+		rele7 = false;
+                TypeOfMovement = null;
+		
+	}
+	public String getTypeOfMovement()
+	{
+		return TypeOfMovement;
+	}
+	
+	public void setTypeOfMovement(String mov)
+	{
+		this.TypeOfMovement = mov;
+	}
+	public boolean getMasterSituation()
+	{
+		return MasterSituation;
+	}
+	
+	public void setMasterSituation(boolean Master)
+	{
+		this.MasterSituation = Master;
+	}
+	
+	public boolean getCamControl()
+	{
+		return CamControl;
+	}
+	
+	public void setCamControl(boolean cam)
+	{
+		this.CamControl = cam;
+	}
+	
+	public int getDelay()
+    {
+            return delay;
+    }
+    
+    public void setDelay(int time)
+    {
+        this.delay = time;
+    }
+    
+    public boolean getRele0()
+    {
+    	return rele0;
+    }
+    
+    public void setRele0(boolean r0)
+    {
+    	this.rele0 = r0;
+    }
+    
+    public boolean getRele1()
+    {
+    	return rele1;
+    }
+    
+    public void setRele1(boolean r1)
+    {
+    	this.rele1 = r1;
+    }
+
+    public boolean getRele2()
+    {
+    	return rele2;
+    }
+    
+    public void setRele2(boolean r2)
+    {
+    	this.rele2 = r2;
+    }
+
+    public boolean getRele3()
+    {
+    	return rele3;
+    }
+    
+    public void setRele3(boolean r3)
+    {
+    	this.rele3 = r3;
+    }
+
+    public boolean getRele4()
+    {
+    	return rele4;
+    }
+    
+    public void setRele4(boolean r4)
+    {
+    	this.rele4 = r4;
+    }
+
+    public boolean getRele5()
+    {
+    	return rele5;
+    }
+    
+    public void setRele5(boolean r5)
+    {
+    	this.rele5 = r5;
+    }
+
+    public boolean getRele6()
+    {
+    	return rele6;
+    }
+    
+    public void setRele6(boolean r6)
+    {
+    	this.rele6 = r6;
+    }
+
+    public boolean getRele7()
+    {
+    	return rele7;
+    }
+    
+    public void setRele7(boolean r7)
+    {
+    	this.rele7 = r7;
+    }
+
+
+}
