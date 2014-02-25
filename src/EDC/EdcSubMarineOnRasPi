@@ -1,0 +1,230 @@
+package EDC;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import Control.GPIOControl;
+import DataManager.ControlToSend;
+
+import com.eurotech.cloud.client.EdcCallbackHandler;
+import com.eurotech.cloud.client.EdcClientException;
+import com.eurotech.cloud.client.EdcClientFactory;
+import com.eurotech.cloud.client.EdcCloudClient;
+import com.eurotech.cloud.client.EdcConfiguration;
+import com.eurotech.cloud.client.EdcConfigurationFactory;
+import com.eurotech.cloud.client.EdcDeviceProfile;
+import com.eurotech.cloud.client.EdcDeviceProfileFactory;
+import com.eurotech.cloud.message.EdcPayload;
+
+import Control.CreationComandRelay;
+
+public class EdcSubMarineOnRasPi implements EdcCallbackHandler {
+	
+	private static String ACCOUNT_NAME = "SumMarineManagementAccount";                                    // Your Account name in Cloud
+	private static String ASSET_ID     = "SubMarineSharingManagement";                                       // Unique Asset ID of this client device
+	private static String BROKER_URL   = "mqtt://192.168.1.130:1883";  // URL address of broker 
+	public static String CLIENT_ID    = "SubMarineManagementClientRasPi";                                // Unique Client ID of this client device
+	private static int USERNAME     = 0;                            // Username in account, to use for publishing
+	private static String PASSWORD     = null;
+	private static final int    PUBLISH_PERIOD = 100;      // time between published messages, in milliseconds
+	public static final String TOPIC = "SubMarineManagementAccount/SubMarineSharingManagement/TopicControlOutput";
+	
+	public static EdcCloudClient edcCloudClient = null;
+	public static int ConnectionBrokerFlag =0;
+        public boolean CreationReleState[] = new boolean[8];
+
+	@Override
+	public void connectionLost() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void connectionRestored() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void controlArrived(String arg0, String arg1, EdcPayload arg2,
+			int arg3, boolean arg4) {
+		// TODO Auto-generated method stub
+		
+	}
+    
+	@Override
+	public void controlArrived(String arg0, String arg1, byte[] arg2, int arg3,
+			boolean arg4) {
+		
+	}
+    
+	@Override
+	public void publishArrived(String arg0, String arg1, EdcPayload arg2,
+			int arg3, boolean arg4) {
+            
+	
+
+		
+	}
+
+	@Override
+	public void publishArrived(String arg0, String arg1, byte[] arg2, int arg3,
+			boolean arg4) {
+		
+		if (arg1.contentEquals("TopicControlInput"))
+		{
+			ControlToSend control = new ControlToSend();
+			try 
+			{
+			control = (ControlToSend) toObject(arg2);
+			} 
+			catch (ClassNotFoundException e) 
+			{
+				e.printStackTrace();
+			} 
+			catch (IOException e) 
+			{
+				
+				e.printStackTrace();
+			}
+                            GPIOControl.setPinStateRele0(control.getRele0());
+                            GPIOControl.setPinStateRele1(control.getRele1());
+                            GPIOControl.setPinStateRele2(control.getRele2());
+                            GPIOControl.setPinStateRele3(control.getRele3());
+                            GPIOControl.setPinStateRele4(control.getRele4());
+                            GPIOControl.setPinStateRele5(control.getRele5());
+                            GPIOControl.setPinStateRele6(control.getRele6());
+                            GPIOControl.setPinStateRele7(control.getRele7());
+
+                            CreationComandRelay.setAllPinState(control.getTypeOfMovement());
+		}
+		
+	}
+	
+	public static void Login() throws EdcClientException, InterruptedException
+	{
+        //rimodificare meglio username, era generale preso da sopra
+	    String Username = Integer.toString(USERNAME);
+	    
+		EdcConfigurationFactory confFact = EdcConfigurationFactory.getInstance();
+		EdcConfiguration conf = confFact.newEdcConfiguration(ACCOUNT_NAME, 
+	                                                             ASSET_ID, 
+	                                                             BROKER_URL, 
+	                                                             CLIENT_ID, 
+	                                                             Username, 
+	                                                             PASSWORD);
+	    
+	     EdcDeviceProfileFactory profFactory = EdcDeviceProfileFactory.getInstance();
+	     EdcDeviceProfile prof = profFactory.newEdcDeviceProfile();
+	     prof.setDisplayName("SubMarineManagementClient");			// friendly name for this CLIENT_ID, for display in the Cloud
+	     prof.setModelName("Eclipse Java Client");
+	   
+	     edcCloudClient = EdcClientFactory.newInstance(conf, prof, new EdcSubMarineOnRasPi());
+             edcCloudClient.startSession();
+	     edcCloudClient.subscribe("TopicControlInput",1);
+	     edcCloudClient.controlSubscribe("+", "TopicControlInput", 1);
+	     ConnectionBrokerFlag=1; //usarlo per mettere una notifica da qualche parte
+             new CreationComandRelay().start();
+             System.out.println("<--Pi4J--> GPIO Control ... started.");
+             new GPIOControl().start();
+         
+         
+	  }
+
+	@Override
+	public void published(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void subscribed(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unsubscribed(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public static byte[] toByteArray(Object obj) throws IOException 
+	{
+		byte[] bytes = null;
+		ByteArrayOutputStream bos = null;
+		ObjectOutputStream oos = null;
+		try 
+		{
+			bos = new ByteArrayOutputStream();
+			oos = new ObjectOutputStream(bos);
+			oos.writeObject(obj);
+			oos.flush();
+			bytes = bos.toByteArray();
+		} 
+		finally 
+		{
+			if (oos != null) 
+			{
+				oos.close();
+			}
+			if (bos != null) 
+			{
+				bos.close();
+			}
+		}
+		return bytes;
+	}
+
+	public Object toObject(byte[] bytes) throws IOException,ClassNotFoundException 
+	{
+		Object obj = null;
+		ByteArrayInputStream bis = null;
+		ObjectInputStream ois = null;
+		try 
+		{
+			bis = new ByteArrayInputStream(bytes);
+			ois = new ObjectInputStream(bis);
+			obj = ois.readObject();
+		} 
+		finally 
+		{
+			if (bis != null) 
+			{
+				bis.close();
+			}
+			if (ois != null) 
+			{
+				ois.close();
+			}
+		}
+		return obj;
+	}
+	
+	public static void SendMessage (String topic, byte[] message)
+	{
+		try 
+		{
+			edcCloudClient.publish(topic, message, 1, false);
+			
+		} 	
+		catch (EdcClientException e) 
+		{
+			
+			e.printStackTrace();
+		}  
+                try 
+                {
+			Thread.sleep(PUBLISH_PERIOD);
+		} 
+                catch (InterruptedException e) 
+                {
+			
+			e.printStackTrace();
+		}
+	}
+
+}
