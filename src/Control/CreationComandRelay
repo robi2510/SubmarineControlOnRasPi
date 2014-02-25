@@ -1,0 +1,243 @@
+package Control;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author Roby
+ */
+public class CreationComandRelay extends Thread{
+    public static boolean CreationReleState[] = new boolean[8];
+    public static String movement_received = null;
+    public static void CreationComandRelay()
+    {
+        
+    }
+    
+    public void run()
+    {
+        
+        
+        for(;;)
+        {
+            int i;
+        for(i=0;i<8;i++)
+        {
+            CreationReleState[i]= false;
+        }
+        String movement_received_from_PC = getAllPinState();
+        if(movement_received_from_PC == null)
+        {
+            GPIOControl.setPinStateRele0(false);
+            GPIOControl.setPinStateRele1(false);
+            GPIOControl.setPinStateRele2(false);
+            GPIOControl.setPinStateRele3(false);
+            GPIOControl.setPinStateRele4(false);
+            GPIOControl.setPinStateRele5(false);
+            GPIOControl.setPinStateRele6(false);
+            GPIOControl.setPinStateRele7(false);
+            GPIOControl.setAllPinState(CreationReleState);
+        }
+        else
+        
+        if(movement_received_from_PC.matches("ahead"))
+        {
+            GPIOControl.setPinStateRele0(false);
+            GPIOControl.setPinStateRele1(false);
+            GPIOControl.setPinStateRele2(false);
+            GPIOControl.setPinStateRele3(false);
+            GPIOControl.setPinStateRele4(true);
+            GPIOControl.setPinStateRele5(false);
+            GPIOControl.setPinStateRele6(false);
+            GPIOControl.setPinStateRele7(true);
+            CreationReleState[4] = true;
+            CreationReleState[7] = true;
+            GPIOControl.setAllPinState(CreationReleState);
+        }
+        
+        else
+            if(movement_received_from_PC.matches("ahead_left"))
+            {
+                GPIOControl.setPinStateRele0(false);
+                GPIOControl.setPinStateRele1(false);
+                GPIOControl.setPinStateRele2(false);
+                GPIOControl.setPinStateRele3(false);
+                GPIOControl.setPinStateRele4(true);
+                GPIOControl.setPinStateRele5(false);
+                GPIOControl.setPinStateRele6(true);
+                GPIOControl.setPinStateRele7(true);
+                CreationReleState[4] = true;
+                CreationReleState[6] = true;
+                CreationReleState[7] = true;
+                GPIOControl.setAllPinState(CreationReleState);
+            }
+            else
+                if(movement_received_from_PC.matches("ahead_right"))
+                {
+                    GPIOControl.setPinStateRele0(false);
+                    GPIOControl.setPinStateRele1(false);
+                    GPIOControl.setPinStateRele2(false);
+                    GPIOControl.setPinStateRele3(false);
+                    GPIOControl.setPinStateRele4(true);
+                    GPIOControl.setPinStateRele5(true);
+                    GPIOControl.setPinStateRele6(false);
+                    GPIOControl.setPinStateRele7(true);
+                    CreationReleState[4] = true;
+                    CreationReleState[5] = true;
+                    CreationReleState[7] = true;
+                    System.out.println("ciao");
+                    GPIOControl.setAllPinState(CreationReleState);
+                }
+                else
+                    if(movement_received_from_PC.matches("left"))
+                    {
+                        GPIOControl.setPinStateRele0(false);
+                        GPIOControl.setPinStateRele1(false);
+                        GPIOControl.setPinStateRele2(false);
+                        GPIOControl.setPinStateRele3(false);
+                        GPIOControl.setPinStateRele4(false);
+                        GPIOControl.setPinStateRele5(false);
+                        GPIOControl.setPinStateRele6(true);
+                        GPIOControl.setPinStateRele7(false);
+                        CreationReleState[6] = true;
+                        GPIOControl.setAllPinState(CreationReleState);
+                    }
+                    else
+                        if(movement_received_from_PC.matches("right"))
+                        {
+                            GPIOControl.setPinStateRele0(false);
+                            GPIOControl.setPinStateRele1(false);
+                            GPIOControl.setPinStateRele2(false);
+                            GPIOControl.setPinStateRele3(false);
+                            GPIOControl.setPinStateRele4(false);
+                            GPIOControl.setPinStateRele5(true);
+                            GPIOControl.setPinStateRele6(false);
+                            GPIOControl.setPinStateRele7(false);
+                            CreationReleState[5] = true;
+                            GPIOControl.setAllPinState(CreationReleState);
+                        }
+                        else
+                            if(movement_received_from_PC.matches("backwards"))
+                            {
+                                GPIOControl.setPinStateRele0(true);
+                                GPIOControl.setPinStateRele1(true);
+                                GPIOControl.setPinStateRele2(false);
+                                GPIOControl.setPinStateRele3(false);
+                                GPIOControl.setPinStateRele4(false);
+                                GPIOControl.setPinStateRele5(false);
+                                GPIOControl.setPinStateRele6(false);
+                                GPIOControl.setPinStateRele7(false);
+                                CreationReleState[0] = true;
+                                CreationReleState[1] = true;
+                                GPIOControl.setAllPinState(CreationReleState);
+                            }
+                            else
+                                if(movement_received_from_PC.matches("backwards_left"))
+                                {
+                                    GPIOControl.setPinStateRele0(true);
+                                    GPIOControl.setPinStateRele1(true);
+                                    GPIOControl.setPinStateRele2(false);
+                                    GPIOControl.setPinStateRele3(false);
+                                    GPIOControl.setPinStateRele4(false);
+                                    GPIOControl.setPinStateRele5(false);
+                                    GPIOControl.setPinStateRele6(true);
+                                    GPIOControl.setPinStateRele7(false);
+                                    CreationReleState[0] = true;
+                                    CreationReleState[1] = true;
+                                    CreationReleState[6] = true;
+                                    GPIOControl.setAllPinState(CreationReleState);
+                                }
+                                else
+                                    if(movement_received_from_PC.matches("backwards_right"))
+                                    {
+                                        GPIOControl.setPinStateRele0(true);
+                                        GPIOControl.setPinStateRele1(true);
+                                        GPIOControl.setPinStateRele2(false);
+                                        GPIOControl.setPinStateRele3(false);
+                                        GPIOControl.setPinStateRele4(false);
+                                        GPIOControl.setPinStateRele5(true);
+                                        GPIOControl.setPinStateRele6(false);
+                                        GPIOControl.setPinStateRele7(false);
+                                        CreationReleState[0] = true;
+                                        CreationReleState[1] = true;
+                                        CreationReleState[5] = true;
+                                        GPIOControl.setAllPinState(CreationReleState);
+                                    }
+                                    else
+                                        if(movement_received_from_PC.matches("immersion"))
+                                        {
+                                            GPIOControl.setPinStateRele0(false);
+                                            GPIOControl.setPinStateRele1(false);
+                                            GPIOControl.setPinStateRele2(false);
+                                            GPIOControl.setPinStateRele3(true);
+                                            GPIOControl.setPinStateRele4(false);
+                                            GPIOControl.setPinStateRele5(false);
+                                            GPIOControl.setPinStateRele6(false);
+                                            GPIOControl.setPinStateRele7(false);
+                                            CreationReleState[3] = true;
+                                            GPIOControl.setAllPinState(CreationReleState);
+                                        }
+                                        else
+                                            if(movement_received_from_PC.matches("emersion"))
+                                            {
+                                                GPIOControl.setPinStateRele0(false);
+                                                GPIOControl.setPinStateRele1(false);
+                                                GPIOControl.setPinStateRele2(true);
+                                                GPIOControl.setPinStateRele3(false);
+                                                GPIOControl.setPinStateRele4(false);
+                                                GPIOControl.setPinStateRele5(false);
+                                                GPIOControl.setPinStateRele6(false);
+                                                GPIOControl.setPinStateRele7(false);
+                                                CreationReleState[2] = true;
+                                                GPIOControl.setAllPinState(CreationReleState);
+                                            }
+                                            else
+                                                if(movement_received_from_PC.matches("clockwise"))
+                                                {
+                                                    GPIOControl.setPinStateRele0(false);
+                                                    GPIOControl.setPinStateRele1(true);
+                                                    GPIOControl.setPinStateRele2(false);
+                                                    GPIOControl.setPinStateRele3(false);
+                                                    GPIOControl.setPinStateRele4(true);
+                                                    GPIOControl.setPinStateRele5(false);
+                                                    GPIOControl.setPinStateRele6(false);
+                                                    GPIOControl.setPinStateRele7(false);
+                                                    CreationReleState[1] = true;
+                                                    CreationReleState[4] = true;
+                                                    GPIOControl.setAllPinState(CreationReleState);;
+                                                }
+                                                else
+                                                    if(movement_received_from_PC.matches("counterclockwise"))
+                                                    {
+                                                        GPIOControl.setPinStateRele0(true);
+                                                        GPIOControl.setPinStateRele1(false);
+                                                        GPIOControl.setPinStateRele2(false);
+                                                        GPIOControl.setPinStateRele3(false);
+                                                        GPIOControl.setPinStateRele4(false);
+                                                        GPIOControl.setPinStateRele5(false);
+                                                        GPIOControl.setPinStateRele6(false);
+                                                        GPIOControl.setPinStateRele7(true);
+                                                        CreationReleState[0] = true;
+                                                        CreationReleState[7] = true;
+                                                        GPIOControl.setAllPinState(CreationReleState);
+                                                    }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(CreationComandRelay.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
+        
+    }
+    public static void setAllPinState(String StateOfMovementFromEDC)
+    {
+        movement_received = StateOfMovementFromEDC;
+    }
+    
+    public String getAllPinState()
+    {
+        return movement_received;
+    }
+    
+}
